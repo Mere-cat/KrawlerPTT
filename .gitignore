@@ -1,0 +1,6 @@
+develop/
+example/
+__pycache__/
+.ipynb_checkpoints/
+.*
+!/.gitignore

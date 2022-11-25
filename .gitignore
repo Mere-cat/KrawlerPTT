@@ -1,6 +1,8 @@
 develop/
 example/
 __pycache__/
+geckodriver
+output.csv
 .ipynb_checkpoints/
 .*
 !/.gitignore

@@ -35,7 +35,7 @@ python KrawlerPTT.py
 This will crawl the Gossiping borad for 10 page:
 
 ```bash
-python KrawlerPTT.py -p NumOfPages
+python KrawlerPTT.py -p 10
 ```
 
 This will crawl the WomenTalk borad for 1 page:
@@ -91,7 +91,7 @@ python KrawlerPTT.py
 爬取十頁八卦板文章：
 
 ```bash
-python KrawlerPTT.py -p NumOfPages
+python KrawlerPTT.py -p 10
 ```
 
 爬取一頁女板文章：

@@ -7,8 +7,6 @@ dataSet = [
 ]
 
 def main():
-    #board = input("Input the board you want to crawl:")
-    #totalPage = int(input("Input the number of page you want to crawl:"))
     board = 'Gossiping'
     totalPage = 1
     argv = sys.argv[1:]

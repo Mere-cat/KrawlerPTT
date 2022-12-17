@@ -3,12 +3,17 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.firefox.options import Options
 
 from bs4 import BeautifulSoup
 from time import sleep
 
 def enterBoard(url):
-    driver = webdriver.Firefox()
+    # make selenium not pop up windows
+    options = Options()
+    options.add_argument('--headless')
+    driver = webdriver.Firefox(options=options)
+
     driver.get(url)
     driver.add_cookie({"name": "over18", "value": "1"})
     driver.get(url)

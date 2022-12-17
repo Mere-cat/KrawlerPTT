@@ -93,8 +93,9 @@ def getPostCont(allCont):
     for i in range(NumComt):
         replys.remove('')
 
-    # delete footer
-    del replys[len(replys)-1]
+    # delete footer (if exist)
+    if (len(replys) != 0):
+        del replys[len(replys)-1]
 
     # combine post and reply
     secondCont = ' '.join(replys)

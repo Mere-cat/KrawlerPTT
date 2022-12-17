@@ -1,7 +1,7 @@
 develop/
 example/
 __pycache__/
-geckodriver
+geckodriver.log
 output.csv
 .ipynb_checkpoints/
 .*

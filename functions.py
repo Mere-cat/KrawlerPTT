@@ -48,25 +48,28 @@ def getAurIp(allF2):
             return ip.strip()
     return -1
 
-def getPostMeatInfo(soup, postUrl):
+def getPostMetaInfo(soup, postUrl):
    
     ID = getPostId(postUrl)
 
     strBoard = soup.find('a', class_ = 'board').getText().strip()
     BOARD = getBoard(strBoard)
 
-    metaInfo = soup.find_all('span', class_ = 'article-meta-value')
-    AUTHOR = metaInfo[0].getText().strip()
-    
-    TITLE = metaInfo[2].getText().strip()
-
-    strTime = metaInfo[len(metaInfo)-1].getText().strip()
-    TIME_STAMP = getTime(strTime)
-
     allF2 = soup.find_all('span', class_ = 'f2')
     AUTHOR_IP = getAurIp(allF2)
+
+    metaInfo = soup.find_all('span', class_ = 'article-meta-value')
+    if (len(metaInfo) != 0):
+
+        AUTHOR = metaInfo[0].getText().strip()
+
+        TITLE = metaInfo[2].getText().strip()
+
+        strTime = metaInfo[len(metaInfo)-1].getText().strip()
+        TIME_STAMP = getTime(strTime)
+        return [ID, TITLE, AUTHOR, BOARD, TIME_STAMP, AUTHOR_IP]
     
-    return [ID, TITLE, AUTHOR, BOARD, TIME_STAMP, AUTHOR_IP]
+    else: return [ID, -1, -1, BOARD, -1, AUTHOR_IP]
 
 def getPostCont(allCont):
     # Post itself

@@ -25,18 +25,23 @@ def crawl(board, totalPage, dataSet):
             # enter each post page
             if post.find('div', class_='title').getText().strip()[0: 8] != '(本文已被刪除)':
                 postUrl = 'https://www.ptt.cc' + post.find('div', class_='title').a['href'].strip()
-                #postUrl = 'https://www.ptt.cc/bbs/Gossiping/M.1669359330.A.E69.html'
+                TITLE = post.find('div', class_='title').getText().strip()
+                AUTHOR = post.find('div', class_='author').getText().strip()
+                TIME_STAMP = 'no record'
                 driver = myFun.enterBoard(postUrl)
                 soup = myFun.BeautifulSoup(driver.page_source, 'html.parser')
                 allCont = soup.find('div', id = 'main-container')
 
                 # Obtain post meta info
-                metaInfo = myFun.getPostMeatInfo(soup, postUrl)
+                metaInfo = myFun.getPostMetaInfo(soup, postUrl)
                 ID = metaInfo[0]
-                TITLE = metaInfo[1]
-                AUTHOR = metaInfo[2]
+                if (metaInfo[1] != -1):
+                    TITLE = metaInfo[1]
+                if(metaInfo[2] != -1):
+                    AUTHOR = metaInfo[2]
                 BOARD = metaInfo[3]
-                TIME_STAMP = metaInfo[4]
+                if(metaInfo[4] != -1):
+                    TIME_STAMP = metaInfo[4]
                 AUTHOR_IP = metaInfo[5]
 
                 # Obtain post content

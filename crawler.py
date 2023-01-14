@@ -2,7 +2,7 @@ import functions as myFun
 import requests
 
 def crawl(board, totalPage, dataSet):
-    url = 'https://www.ptt.cc/bbs/' + board + '/index.html'
+    url = 'https://www.pttweb.cc/bbs/' + board + '/page'
 
     # Check if web page exists
     rsp = requests.get(url).status_code
@@ -14,10 +14,11 @@ def crawl(board, totalPage, dataSet):
         
         # Get the elements in this page
         soup = myFun.BeautifulSoup(driver.page_source, 'html.parser')
-        posts = soup.find_all('div', class_='r-ent')
+        posts = soup.find_all('div', class_='e7-right-top-container e7-no-outline-all-descendants')
 
         # Next page url
-        partUrl = str(soup.select_one('#action-bar-container div.action-bar div.btn-group.btn-group-paging a:nth-of-type(2)')['href'])
+        partUrl = soup.find('a', class_= 'blue darken-3 v-btn v-btn--router v-btn--small theme--dark').strip()
+        #partUrl = str(soup.select_one('#action-bar-container div.action-bar div.btn-group.btn-group-paging a:nth-of-type(2)')['href'])
         url = 'https://www.ptt.cc' + partUrl
                 
         for post in posts:

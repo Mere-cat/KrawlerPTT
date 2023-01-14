@@ -12,7 +12,7 @@ def main():
     argv = sys.argv[1:]
 
     try:
-        opts, args = getopt.getopt(argv, "b:p:")
+        opts, args = getopt.getopt(argv, "b:n:")
 
     except:
         print("Error")
@@ -20,7 +20,7 @@ def main():
     for opt,arg in opts:
         if opt in ['-b']:
             board = arg
-        elif opt in ['-p']:
+        elif opt in ['-n']:
             totalPage = int(arg)
             if(totalPage <= 0):
                 print('[ERROR] number of page should be positive.')

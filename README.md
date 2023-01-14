@@ -17,28 +17,28 @@ Your device should install those package first:
 After downloading this repository, you can execute it in the terminal in this way:
 
 ```bash
-python KrawlerPTT.py -b boardName -p NumOfPages
+python KrawlerPTT.py -b boardName -n NumOfPosts
 ```
 
-The `-b` and `-p` arguments are optional, within those arguments, you can crawl a specific board and set how many pages you want to collelect data from. 
+The `-b` and `-n` arguments are optional, within those arguments, you can crawl a specific board and set how many posts you want to collelect. 
 
-If you don't execute this program without any argument, the deault is crawling the Gossiping borad for 1 page.
+If you don't execute this program without any argument, the deault is crawling the Gossiping borad for 10 post.
 
 ### Examples
 
-This will crawl the Gossiping borad for 1 page:
+This will crawl the Gossiping borad for 10 posts:
 
 ```bash
 python KrawlerPTT.py
 ```
 
-This will crawl the Gossiping borad for 10 page:
+This will crawl the Gossiping borad for 30 posts:
 
 ```bash
-python KrawlerPTT.py -p 10
+python KrawlerPTT.py -n 30
 ```
 
-This will crawl the WomenTalk borad for 1 page:
+This will crawl the WomenTalk borad for 10 posts:
 
 ```bash
 python KrawlerPTT.py -b WomenTalk
@@ -75,10 +75,10 @@ KrawlerPTT 是一個非常簡單的爬蟲小程式，可以用來爬取 PTT 的�
 下載程式後，在終端機輸入以下指令執行：
 
 ```bash
-python KrawlerPTT.py -b 看板名稱 -p 抓取頁數
+python KrawlerPTT.py -b 看板名稱 -n 抓取文章數
 ```
 
-參數 `-b` 和 `-p` 不是必要的，這兩個參數是用來選擇要爬取的PTT看板以及爬取頁數。如果不加的話，預設會爬取八卦板最新的一頁文章。
+參數 `-b` 和 `-n` 不是必要的，這兩個參數是用來選擇要爬取的PTT看板以及爬取頁數。如果不加的話，預設會爬取八卦板最新的10則文章。
 
 ### 使用範例
 
@@ -88,13 +88,13 @@ python KrawlerPTT.py -b 看板名稱 -p 抓取頁數
 python KrawlerPTT.py
 ```
 
-爬取十頁八卦板文章：
+爬取30則八卦板文章：
 
 ```bash
-python KrawlerPTT.py -p 10
+python KrawlerPTT.py -p 30
 ```
 
-爬取一頁女板文章：
+爬取10則女板文章：
 
 ```bash
 python KrawlerPTT.py -b WomenTalk

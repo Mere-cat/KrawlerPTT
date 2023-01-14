@@ -22,8 +22,8 @@ def main():
         if opt in ['-b']:
             board = arg
         elif opt in ['-n']:
-            totalPage = int(arg)
-            if(totalPage <= 0):
+            totalPost = int(arg)
+            if(totalPost <= 0):
                 print('[ERROR] number of page should be positive.')
                 return 1
 

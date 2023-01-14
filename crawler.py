@@ -67,9 +67,9 @@ def crawl(board, totalPost, dataSet):
                 if(metaInfo[1] != -1):
                     AUTHOR = metaInfo[1]
                 BOARD = metaInfo[2]
-                if(metaInfo[4] != -1):
-                    TIME_STAMP = metaInfo[4]
-                #AUTHOR_IP = metaInfo[5]
+                if(metaInfo[3] != -1):
+                    TIME_STAMP = metaInfo[3]
+                #AUTHOR_IP = metaInfo[4]
                 AUTHOR_IP = '123.456.789.000'
 
                 # Obtain post content

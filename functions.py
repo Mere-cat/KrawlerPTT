@@ -1,5 +1,6 @@
 import time
 import pandas as pd
+import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
@@ -31,19 +32,8 @@ def getBoard(strBoard):
     return strBoard[1]
 
 def getTime(strTime):
-    strTime = strTime.split('(')
-    # strTime = strTime.split(' ')
-    # if '' in strTime:
-    #     strTime.remove('')
-    # monthTab = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    # strMonth = strTime[1]
-    # month = monthTab.index(strMonth) + 1
-    # day = strTime[2]
-    # time = strTime[3]
-    # year = strTime[4]
-
-    # resTime = year + '-' + str(month) + '-' + day + ' ' + time
-    # return resTime.strip()
+    strTime = strTime.replace('(', ')')
+    strTime = strTime.split(')')
     return strTime[1]
 
 def getAurIp(allF2):
@@ -65,42 +55,14 @@ def getPostMetaInfo(soup, postUrl):
     #TITLE = soup.find('h1', class_ = 'title mt-2').getText().strip()
 
     metaInfo = soup.find_all('span', class_ = 'e7-head-content')
-    if (len(metaInfo) != 0):
+    BOARD = metaInfo[0].getText().strip()
 
-        BOARD = metaInfo[0].getText().strip()
-        #print(BOARD)
+    AUTHOR = metaInfo[1].getText().strip()
 
-        AUTHOR = metaInfo[1].getText().strip()
-        #print(AUTHOR)
-
-        strTime = metaInfo[2].getText().strip()
-        TIME_STAMP = getTime(strTime)
-        #print(TIME_STAMP)
-        #print('--------------------------')
-        return [ID, AUTHOR, BOARD, TIME_STAMP, AUTHOR_IP]
+    strTime = metaInfo[2].getText().strip()
+    TIME_STAMP = getTime(strTime)
     
-    else: return [ID, -1, BOARD, -1, AUTHOR_IP]
-   
-    # ID = getPostId(postUrl)
-
-    # strBoard = soup.find('a', class_ = 'board').getText().strip()
-    # BOARD = getBoard(strBoard)
-
-    # allF2 = soup.find_all('span', class_ = 'f2')
-    # AUTHOR_IP = getAurIp(allF2)
-
-    # metaInfo = soup.find_all('span', class_ = 'article-meta-value')
-    # if (len(metaInfo) != 0):
-
-    #     AUTHOR = metaInfo[0].getText().strip()
-
-    #     TITLE = metaInfo[2].getText().strip()
-
-    #     strTime = metaInfo[len(metaInfo)-1].getText().strip()
-    #     TIME_STAMP = getTime(strTime)
-    #     return [ID, TITLE, AUTHOR, BOARD, TIME_STAMP, AUTHOR_IP]
-    
-    # else: return [ID, -1, -1, BOARD, -1, AUTHOR_IP]
+    return [ID, AUTHOR, BOARD, TIME_STAMP, AUTHOR_IP]
 
 def getPostCont(allCont):
     # Post itself

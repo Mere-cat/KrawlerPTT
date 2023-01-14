@@ -46,11 +46,11 @@ def crawl(board, totalPost, dataSet):
 
             # Crawl the info from each post
             if post.find('span', class_='e7-title').getText().strip()[0: 8] != '(本文已被刪除)':
-                print(postCnt)
+                #print(postCnt)
                 # We obtain post TITLE from the index page, and set default for AUTHOR and TIME_STAMP
                 TITLE = post.find('span', class_='e7-title')
                 TITLE = TITLE.find('span', class_='e7-show-if-device-is-not-xs').getText().strip()
-                print(TITLE)
+                #print(TITLE)
                 AUTHOR = 'NULL'
                 TIME_STAMP = 'no record'
 
@@ -69,18 +69,26 @@ def crawl(board, totalPost, dataSet):
                 BOARD = metaInfo[2]
                 if(metaInfo[4] != -1):
                     TIME_STAMP = metaInfo[4]
-                AUTHOR_IP = metaInfo[5]
+                #AUTHOR_IP = metaInfo[5]
+                AUTHOR_IP = '123.456.789.000'
 
                 # Obtain post content
-                allCont = soupEachPost.find('div', id = 'main-container')
-                CONTENT = myFun.getPostCont(allCont)
+                #allCont = soupEachPost.find('div', id = 'main-container')
+                #CONTENT = myFun.getPostCont(allCont)
+                CONTENT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit,'
 
                 # Obtain comments/rating/commenters
-                comtAndRating = myFun.getComt(allCont)
-                COMMENTS = comtAndRating[0]
-                RATING = comtAndRating[1]
-                COMMENTERS = comtAndRating[2]
-                POLARITY = comtAndRating[3]
+                # comtAndRating = myFun.getComt(allCont)
+                # COMMENTS = comtAndRating[0]
+                # RATING = comtAndRating[1]
+                # COMMENTERS = comtAndRating[2]
+                # POLARITY = comtAndRating[3]
+
+                #comtAndRating = myFun.getComt(allCont)
+                COMMENTS = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit,'
+                RATING = '123'
+                COMMENTERS = 'JohnDoe'
+                POLARITY = '123'
 
                 # Close the driver for the post page
                 driverEachPost.close()

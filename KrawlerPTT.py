@@ -1,5 +1,6 @@
 import crawler
 import getopt, sys
+import default_var as DFLT
 
 dataSet = [
     # we have 11 columns in each row
@@ -8,7 +9,7 @@ dataSet = [
 
 def main():
     board = 'Gossiping'
-    totalPage = 1
+    totalPost = DFLT.DEFAULT_POSTS
     argv = sys.argv[1:]
 
     try:
@@ -26,7 +27,7 @@ def main():
                 print('[ERROR] number of page should be positive.')
                 return 1
 
-    valid = crawler.crawl(board, totalPage, dataSet)
+    valid = crawler.crawl(board, totalPost, dataSet)
     if(valid == 0):
         print('KrawlerPTT executed successfully. The result was output as "output.csv".')
     else:

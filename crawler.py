@@ -1,51 +1,78 @@
-import functions as myFun
 import requests
+import functions as myFun
+import default_var as DFLT
 
-def crawl(board, totalPage, dataSet):
-    url = 'https://www.pttweb.cc/bbs/' + board + '/page'
+def crawl(board, totalPost, dataSet):
+
+    url = 'https://www.pttweb.cc/bbs/' + board
 
     # Check if web page exists
     rsp = requests.get(url).status_code
     if(rsp != 200): return -1
 
-    for curPage in range(totalPage):
-        # Enter a new index page
-        driver = myFun.enterBoard(url);
+    # Enter the index page
+    driverIdx = myFun.enterBoard(url);
+
+    # Count the number of posts we crawled
+    postCnt = 0
+
+    # The loop to scroll the window
+    for i in range(0, DFLT.MAX_SCROLLING):
+        # End the loop: we obtained the 
+        if (postCnt == totalPost):
+            break
         
+        # Scroll down to bottom
+        driverIdx.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    
+        # Wait to load page
+        myFun.time.sleep(DFLT.SCROLL_PAUSE_TIME)
+
         # Get the elements in this page
-        soup = myFun.BeautifulSoup(driver.page_source, 'html.parser')
-        posts = soup.find_all('div', class_='e7-right-top-container e7-no-outline-all-descendants')
+        soupIdx = myFun.BeautifulSoup(driverIdx.page_source, 'html.parser')
+        posts = soupIdx.find_all('div', class_='e7-right-top-container e7-no-outline-all-descendants')
+        #print(len(posts))
 
-        # Next page url
-        partUrl = soup.find('a', class_= 'blue darken-3 v-btn v-btn--router v-btn--small theme--dark').strip()
-        #partUrl = str(soup.select_one('#action-bar-container div.action-bar div.btn-group.btn-group-paging a:nth-of-type(2)')['href'])
-        url = 'https://www.ptt.cc' + partUrl
-                
+        # Remove style and script
+        for tag in soupIdx():
+            for attribute in ["script", "style"]:
+                del tag[attribute]
+        
+        # Enter each post
         for post in posts:
-            # for i in range(1):
-            # enter each post page
-            if post.find('div', class_='title').getText().strip()[0: 8] != '(本文已被刪除)':
-                postUrl = 'https://www.ptt.cc' + post.find('div', class_='title').a['href'].strip()
-                TITLE = post.find('div', class_='title').getText().strip()
-                AUTHOR = post.find('div', class_='author').getText().strip()
-                TIME_STAMP = 'no record'
-                driver = myFun.enterBoard(postUrl)
-                soup = myFun.BeautifulSoup(driver.page_source, 'html.parser')
-                allCont = soup.find('div', id = 'main-container')
+            # End the loop
+            if (postCnt == totalPost):
+                break
 
-                # Obtain post meta info
-                metaInfo = myFun.getPostMetaInfo(soup, postUrl)
+            # Crawl the info from each post
+            if post.find('span', class_='e7-title').getText().strip()[0: 8] != '(本文已被刪除)':
+                print(postCnt)
+                # We obtain post TITLE from the index page, and set default for AUTHOR and TIME_STAMP
+                TITLE = post.find('span', class_='e7-title')
+                TITLE = TITLE.find('span', class_='e7-show-if-device-is-not-xs').getText().strip()
+                print(TITLE)
+                AUTHOR = 'NULL'
+                TIME_STAMP = 'no record'
+
+                # Enter each article
+                postCnt = postCnt + 1
+                linkElement = post.find('a', class_ = 'e7-article-default')
+                postUrl = 'https://www.pttweb.cc' + linkElement['href']
+                driverEachPost = myFun.enterBoard(postUrl)
+                soupEachPost = myFun.BeautifulSoup(driverEachPost.page_source, 'html.parser')
+                
+                # Obtain post meta info: ID, AUTHOR, BOARD, TIME_STAMP, AUTHOR_IP
+                metaInfo = myFun.getPostMetaInfo(soupEachPost, postUrl)
                 ID = metaInfo[0]
-                if (metaInfo[1] != -1):
-                    TITLE = metaInfo[1]
-                if(metaInfo[2] != -1):
-                    AUTHOR = metaInfo[2]
-                BOARD = metaInfo[3]
+                if(metaInfo[1] != -1):
+                    AUTHOR = metaInfo[1]
+                BOARD = metaInfo[2]
                 if(metaInfo[4] != -1):
                     TIME_STAMP = metaInfo[4]
                 AUTHOR_IP = metaInfo[5]
 
                 # Obtain post content
+                allCont = soupEachPost.find('div', id = 'main-container')
                 CONTENT = myFun.getPostCont(allCont)
 
                 # Obtain comments/rating/commenters
@@ -55,11 +82,17 @@ def crawl(board, totalPage, dataSet):
                 COMMENTERS = comtAndRating[2]
                 POLARITY = comtAndRating[3]
 
+                # Close the driver for the post page
+                driverEachPost.close()
+
                 # Write data into data set
                 eachData = [ID, TITLE, AUTHOR, BOARD, CONTENT, TIME_STAMP, AUTHOR_IP, COMMENTS, RATING, COMMENTERS, POLARITY]
                 dataSet.append(eachData)
-                driver.quit()
 
+    # Close the driver for the index page            
+    driverIdx.close()
+
+    # Output the data
     df = myFun.pd.DataFrame(dataSet)
     df.columns = ["ID", "TITLE", "AUTHOR", "BOARD", "CONTENT", "TIME_STAMP", "AUTHOR_IP", "COMMENTS", "RATING", "COMMENTERS", "POLARITY"]
     df.to_csv("output.csv")

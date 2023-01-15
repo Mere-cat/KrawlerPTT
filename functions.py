@@ -87,12 +87,25 @@ def getPostMetaInfo(soup, postUrl):
 
     ratings = metaInfo[3].getText().strip()
     RATING = ratings.split('(')[0]
-    print(ratings)
-    # ratings = ratings.splits(" ")
-    # RATING = ratings[0]
-    # POLARITY = ratings[0]
+
+    # Polarity
+    polarities = ratings.split('(')[1]
+    polarities = polarities.split(' ')
+
+    pushCnt = int(polarities[0].strip('推'))
+    booCnt = int(polarities[1].strip('噓'))
+    neturalCnt = int(polarities[2].strip('→)'))
+    allCnt = pushCnt + booCnt + neturalCnt
+
+    POLARITY = {
+        "all": allCnt,
+        "boo": booCnt,
+        "count": int(RATING),
+        "neutral": neturalCnt,
+        "push": pushCnt
+    }
     
-    return [ID, AUTHOR, BOARD, TIME_STAMP, RATING, '123']
+    return [ID, AUTHOR, BOARD, TIME_STAMP, RATING, POLARITY]
 
 def getPostCont(allCont):
     # Post itself 
@@ -146,45 +159,3 @@ def getPostCont(allCont):
         CONTENT = contParts
 
     return CONTENT
-
-def getComt(allCont):
-    pushes = allCont.find_all('div', class_ = 'push')
-    comts = []
-    comters = []
-    ratings = []
-
-    allCnt = len(pushes)
-    booCnt = 0
-    neturalCnt = 0
-    pushCnt = 0
-
-    for push in pushes:
-        rating = push.find('span', class_ = 'push-tag').getText().strip()
-        ratings.append(rating)
-        if(rating == '推'): pushCnt += 1
-        elif(rating == '噓'): booCnt += 1
-        else: neturalCnt += 1
-
-        comter = push.find('span', class_ = 'push-userid').getText().strip()
-        comters.append(comter)
-
-        comt = push.find('span', class_ = 'push-content').getText().strip()
-        comt = comt[2:]
-        comts.append(comt)
-
-    # list to string
-    comts = '!@#'.join(comts)
-    ratings = '!@#'.join(ratings)
-    comters = '!@#'.join(comters)
-
-    # calculate polarity
-    count = pushCnt - booCnt
-    polarity = {
-        "all": allCnt,
-        "boo": booCnt,
-        "count": count,
-        "neutral": neturalCnt,
-        "push": pushCnt
-    }
-
-    return [comts, ratings, comters, polarity]

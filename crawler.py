@@ -61,7 +61,7 @@ def crawl(board, totalPost, dataSet):
                 driverEachPost = myFun.enterBoard(postUrl)
                 soupEachPost = myFun.BeautifulSoup(driverEachPost.page_source, 'html.parser')
                 
-                # Obtain post meta info: ID, AUTHOR, BOARD, TIME_STAMP
+                # Obtain post meta info: ID, AUTHOR, BOARD, TIME_STAMP, RATING and POLARITY
                 metaInfo = myFun.getPostMetaInfo(soupEachPost, postUrl)
                 ID = metaInfo[0]
                 if(metaInfo[1] != -1):
@@ -69,6 +69,8 @@ def crawl(board, totalPost, dataSet):
                 BOARD = metaInfo[2]
                 if(metaInfo[3] != -1):
                     TIME_STAMP = metaInfo[3]
+                RATING = metaInfo[4]
+                POLARITY = metaInfo[5]
 
                 # Obtain AUTHOR_IP
                 allf3 = soupEachPost.find_all('span', class_ = 'f3')
@@ -82,16 +84,9 @@ def crawl(board, totalPost, dataSet):
                 
 
                 # Obtain the comments part: COMMENTS, RATING, COMMENTERS, POLARITY
-                # comtAndRating = myFun.getComt(allCont)
                 allCommt = soupEachPost.find_all('div', itemprop = 'comment')
                 COMMENTS = myFun.getCommt(allCommt)
-                # RATING = comtAndRating[1]
-                # COMMENTERS = comtAndRating[2]
-                # POLARITY = comtAndRating[3]
-
-                RATING = '123'
-                COMMENTERS = 'JohnDoe'
-                POLARITY = '123'
+                COMMENTERS = myFun.getCommter(allCommt)
 
                 # Close the driver for the post page
                 driverEachPost.quit()

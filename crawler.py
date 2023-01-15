@@ -70,22 +70,24 @@ def crawl(board, totalPost, dataSet):
                 if(metaInfo[3] != -1):
                     TIME_STAMP = metaInfo[3]
 
-                # Obtain post content: CONTENT, AUTHOR_IP
+                # Obtain AUTHOR_IP
+                allf3 = soupEachPost.find_all('span', class_ = 'f3')
+                #print(allf3)
+                AUTHOR_IP = myFun.getAurIp(allf3)
+
+                # Obtain CONTENT
+                # notice this will decompose all of the f3 span in allCont
                 allCont = soupEachPost.find_all('div', class_ = 'e7-main-content')
-                tmp = myFun.getPostCont(allCont)
-                CONTENT = tmp[0]
-                AUTHOR_IP = tmp[1]
+                CONTENT = myFun.getPostCont(allCont)
+                
 
-                #CONTENT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit,'
-
-                # Obtain comments/rating/commenters
+                # Obtain the comments part: COMMENTS, RATING, COMMENTERS, POLARITY
                 # comtAndRating = myFun.getComt(allCont)
                 # COMMENTS = comtAndRating[0]
                 # RATING = comtAndRating[1]
                 # COMMENTERS = comtAndRating[2]
                 # POLARITY = comtAndRating[3]
 
-                #comtAndRating = myFun.getComt(allCont)
                 COMMENTS = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit,'
                 RATING = '123'
                 COMMENTERS = 'JohnDoe'

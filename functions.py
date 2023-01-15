@@ -36,22 +36,22 @@ def getTime(strTime):
     strTime = strTime.split(')')
     return strTime[1]
 
-def getAurIp(ipPart):
-    for span in ipPart:
-        span = span.getText().strip()
-        print(span)
-        if span[0: 5] == "※ 發信站":
-            ip = span.split(':')[2]
+def getAurIp(allf3):
+    # The author ip information
+    # The author ip is in the last 'f3' class span
+    for span in allf3:
+        hi = span.getText().strip()
+        
+        # get the first "發信站"
+        if hi[0: 5] == "※ 發信站":
+            ip = hi.split(':')[2]
             ip = ip.split('(')[0]
-            #return ip.strip()
+            return ip
     return "0.0.0.0"
 
 def getPostMetaInfo(soup, postUrl):
     
     ID = getPostId(postUrl)
-
-    #allF2 = soup.find_all('span', class_ = 'e7-main-content')
-    AUTHOR_IP = '---'
 
     metaInfo = soup.find_all('span', class_ = 'e7-head-content')
     BOARD = metaInfo[0].getText().strip()
@@ -61,7 +61,7 @@ def getPostMetaInfo(soup, postUrl):
     strTime = metaInfo[2].getText().strip()
     TIME_STAMP = getTime(strTime)
     
-    return [ID, AUTHOR, BOARD, TIME_STAMP, AUTHOR_IP]
+    return [ID, AUTHOR, BOARD, TIME_STAMP]
 
 def getPostCont(allCont):
     # Post itself 
@@ -78,16 +78,16 @@ def getPostCont(allCont):
             for j in range(0, len(contPara)):
                 # Replace new line with space
                 texts = contPara[j].getText().strip().strip('--').replace('\n', ' ')
-                print(texts)
                 # Concate all
                 contParts = contParts + ' ' + texts
+
     # if we only have one 'e7-main-content' div (allCont), run this:
     else:
         # delete all f3 span first
-        for span in allCont.find_all('span', class_ = 'f3'): 
+        for span in allCont[0].find_all('span', class_ = 'f3'): 
             span.decompose()
         # Find all of the post content 
-        contPara = allCont.find_all('span', class_ = '')
+        contPara = allCont[0].find_all('span', class_ = '')
         for j in range(0, len(contPara)):
             # Replace new line with space
             texts = contPara[j].getText().strip('--').strip().replace('\n', ' ')
@@ -100,8 +100,6 @@ def getPostCont(allCont):
         texts = contPara[j].getText().strip('--').strip().replace('\n', ' ')
         # Concate all
         contParts = contParts + ' ' + texts
-
-
 
     # author's reply
     replys = ''
@@ -116,12 +114,7 @@ def getPostCont(allCont):
     else:
         CONTENT = contParts
 
-    # The author ip information
-    # The author ip is in the last 'f3' class span
-    ipPart = allCont[0].find_all('span', class_ = 'f3')
-    AUTHOR_IP = getAurIp(ipPart) # extract the ip address from all of the 'f3' span tags
-
-    return [CONTENT,AUTHOR_IP]
+    return CONTENT
 
 def getComt(allCont):
     pushes = allCont.find_all('div', class_ = 'push')

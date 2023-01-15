@@ -61,7 +61,7 @@ def crawl(board, totalPost, dataSet):
                 driverEachPost = myFun.enterBoard(postUrl)
                 soupEachPost = myFun.BeautifulSoup(driverEachPost.page_source, 'html.parser')
                 
-                # Obtain post meta info: ID, AUTHOR, BOARD, TIME_STAMP, AUTHOR_IP
+                # Obtain post meta info: ID, AUTHOR, BOARD, TIME_STAMP
                 metaInfo = myFun.getPostMetaInfo(soupEachPost, postUrl)
                 ID = metaInfo[0]
                 if(metaInfo[1] != -1):
@@ -69,13 +69,14 @@ def crawl(board, totalPost, dataSet):
                 BOARD = metaInfo[2]
                 if(metaInfo[3] != -1):
                     TIME_STAMP = metaInfo[3]
-                #AUTHOR_IP = metaInfo[4]
-                AUTHOR_IP = '123.456.789.000'
 
-                # Obtain post content
-                #allCont = soupEachPost.find('div', id = 'main-container')
-                #CONTENT = myFun.getPostCont(allCont)
-                CONTENT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit,'
+                # Obtain post content: CONTENT, AUTHOR_IP
+                allCont = soupEachPost.find_all('div', class_ = 'e7-main-content')
+                tmp = myFun.getPostCont(allCont)
+                CONTENT = tmp[0]
+                AUTHOR_IP = tmp[1]
+
+                #CONTENT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit,'
 
                 # Obtain comments/rating/commenters
                 # comtAndRating = myFun.getComt(allCont)
@@ -98,7 +99,7 @@ def crawl(board, totalPost, dataSet):
                 dataSet.append(eachData)
 
     # Close the driver for the index page            
-    driverIdx.close()
+    driverIdx.quit()
 
     # Output the data
     df = myFun.pd.DataFrame(dataSet)

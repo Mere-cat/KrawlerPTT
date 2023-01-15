@@ -49,6 +49,18 @@ def getAurIp(allf3):
             return ip
     return "0.0.0.0"
 
+def getCommt(allCommt):
+    commts = []
+    for i in range(0, len(allCommt)):
+        #print(allCommt[i])
+        commt = allCommt[i].find_all('div', itemprop = 'text')[0].getText().split()[0]
+        commts.append(commt)
+
+    if len(commts) > 0:
+        COMMENTS = '!@#'.join(commts)
+        return COMMENTS
+    else: return "no comment"
+
 def getPostMetaInfo(soup, postUrl):
     
     ID = getPostId(postUrl)

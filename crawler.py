@@ -83,18 +83,18 @@ def crawl(board, totalPost, dataSet):
 
                 # Obtain the comments part: COMMENTS, RATING, COMMENTERS, POLARITY
                 # comtAndRating = myFun.getComt(allCont)
-                # COMMENTS = comtAndRating[0]
+                allCommt = soupEachPost.find_all('div', itemprop = 'comment')
+                COMMENTS = myFun.getCommt(allCommt)
                 # RATING = comtAndRating[1]
                 # COMMENTERS = comtAndRating[2]
                 # POLARITY = comtAndRating[3]
 
-                COMMENTS = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit,'
                 RATING = '123'
                 COMMENTERS = 'JohnDoe'
                 POLARITY = '123'
 
                 # Close the driver for the post page
-                driverEachPost.close()
+                driverEachPost.quit()
 
                 # Write data into data set
                 eachData = [ID, TITLE, AUTHOR, BOARD, CONTENT, TIME_STAMP, AUTHOR_IP, COMMENTS, RATING, COMMENTERS, POLARITY]

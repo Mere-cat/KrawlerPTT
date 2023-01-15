@@ -40,12 +40,17 @@ def getAurIp(allf3):
     # The author ip information
     # The author ip is in the last 'f3' class span
     for span in allf3:
-        hi = span.getText().strip()
+        tmp = span.getText().strip()
         
         # get the first "發信站"
-        if hi[0: 5] == "※ 發信站":
-            ip = hi.split(':')[2]
-            ip = ip.split('(')[0]
+        if tmp[0: 5] == "※ 發信站":
+            ip = tmp.split(':')[2]
+            ip = ip.split('※')[0]
+
+            # remove the country information
+            # if the last character in ip is ')', it implies the ip contains the country name
+            if(ip[-1] == ')'):
+                ip = ip.split('(')[0]
             return ip
     return "0.0.0.0"
 

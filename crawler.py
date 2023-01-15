@@ -18,20 +18,13 @@ def crawl(board, totalPost, dataSet):
 
     # The loop to scroll the window
     for i in range(0, DFLT.MAX_SCROLLING):
-        # End the loop: we obtained the 
+        # End the loop: we obtained the given number of data
         if (postCnt == totalPost):
             break
-        
-        # Scroll down to bottom
-        driverIdx.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    
-        # Wait to load page
-        myFun.time.sleep(DFLT.SCROLL_PAUSE_TIME)
 
         # Get the elements in this page
         soupIdx = myFun.BeautifulSoup(driverIdx.page_source, 'html.parser')
         posts = soupIdx.find_all('div', class_='e7-right-top-container e7-no-outline-all-descendants')
-        #print(len(posts))
 
         # Remove style and script
         for tag in soupIdx():
@@ -50,7 +43,19 @@ def crawl(board, totalPost, dataSet):
                 # We obtain post TITLE from the index page, and set default for AUTHOR and TIME_STAMP
                 TITLE = post.find('span', class_='e7-title')
                 TITLE = TITLE.find('span', class_='e7-show-if-device-is-not-xs').getText().strip()
-                #print(TITLE)
+                reoccured = 0
+                
+                # If the post has already been crawled
+                for headPost in range(0, 5):
+                    if(len(dataSet) < 5): continue
+                    if(TITLE in dataSet[headPost]):
+                        reoccured = 1
+                        break
+
+                if (reoccured == 1):
+                    reoccured = 0
+                    continue
+
                 AUTHOR = 'NULL'
                 TIME_STAMP = 'no record'
 
@@ -94,6 +99,13 @@ def crawl(board, totalPost, dataSet):
                 # Write data into data set
                 eachData = [ID, TITLE, AUTHOR, BOARD, CONTENT, TIME_STAMP, AUTHOR_IP, COMMENTS, RATING, COMMENTERS, POLARITY]
                 dataSet.append(eachData)
+
+
+        # Scroll down to bottom
+        driverIdx.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        # Wait to load page
+        myFun.time.sleep(DFLT.SCROLL_PAUSE_TIME)            
 
     # Close the driver for the index page            
     driverIdx.quit()

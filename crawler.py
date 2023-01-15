@@ -1,4 +1,5 @@
 import requests
+from selenium.webdriver.common.by import By
 import functions as myFun
 import default_var as DFLT
 
@@ -33,6 +34,8 @@ def crawl(board, totalPost, dataSet):
         
         # Enter each post
         for post in posts:
+            TITLE = 'no title'
+
             # End the loop
             if (postCnt == totalPost):
                 break
@@ -62,9 +65,21 @@ def crawl(board, totalPost, dataSet):
                 # Enter each article
                 postCnt = postCnt + 1
                 linkElement = post.find('a', class_ = 'e7-article-default')
+                #postUrl = 'https://www.pttweb.cc/bbs/Gossiping/M.1673716679.A.DE4' # testing url
                 postUrl = 'https://www.pttweb.cc' + linkElement['href']
                 driverEachPost = myFun.enterBoard(postUrl)
                 soupEachPost = myFun.BeautifulSoup(driverEachPost.page_source, 'html.parser')
+
+                # If there exists a 'load more' btn
+                btn = soupEachPost.find_all('button', class_='amber--text v-btn v-btn--outline v-btn--depressed theme--dark')
+                if(btn):
+                    btn = driverEachPost.find_element(By.CSS_SELECTOR,'button.amber--text')
+                    # Click it
+                    driverEachPost.execute_script("arguments[0].click();", btn)
+                    # Scroll down to bottom
+                    driverEachPost.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                    # apply beautifulSoup again
+                    soupEachPost = myFun.BeautifulSoup(driverEachPost.page_source, 'html.parser')              
                 
                 # Obtain post meta info: ID, AUTHOR, BOARD, TIME_STAMP, RATING and POLARITY
                 metaInfo = myFun.getPostMetaInfo(soupEachPost, postUrl)

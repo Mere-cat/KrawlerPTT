@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.support.select import Select
 
 from bs4 import BeautifulSoup
 from time import sleep
@@ -45,11 +46,11 @@ def getAurIp(allf3):
         # get the first "發信站"
         if tmp[0: 5] == "※ 發信站":
             ip = tmp.split(':')[2]
-            ip = ip.split('※')[0]
+            ip = ip.split('※')[0].strip()
 
             # remove the country information
             # if the last character in ip is ')', it implies the ip contains the country name
-            if(ip[-1] == ')'):
+            if(ip[len(ip)-1] == ')'):
                 ip = ip.split('(')[0]
             return ip
     return "0.0.0.0"
@@ -61,7 +62,8 @@ def getCommt(allCommt):
         commt = allCommt[i].find_all('div', itemprop = 'text')[0].getText()
         #print(commt)
         commts.append(commt)
-
+    #print(len(allCommt))
+    
     if len(commts) > 0:
         COMMENTS = '!@#'.join(commts)
         return COMMENTS

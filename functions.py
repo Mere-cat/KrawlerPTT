@@ -53,7 +53,7 @@ def getCommt(allCommt):
     commts = []
     for i in range(0, len(allCommt)):
         #print(i)
-        commt = allCommt[i].find_all('div', itemprop = 'text')[0].getText().split()[0]
+        commt = allCommt[i].find_all('div', itemprop = 'text')[0].getText()
         #print(commt)
         commts.append(commt)
 
@@ -65,7 +65,7 @@ def getCommt(allCommt):
 def getCommter(allCommt):
     commters = []
     for i in range(0, len(allCommt)):
-        commter = allCommt[i].find_all('div', itemprop = 'author')[0].getText().split()[0]
+        commter = allCommt[i].find_all('div', itemprop = 'author')[0].getText()
         commters.append(commter)
 
     if len(commters) > 0:

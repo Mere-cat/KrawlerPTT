@@ -52,9 +52,9 @@ def getAurIp(allf3):
 def getCommt(allCommt):
     commts = []
     for i in range(0, len(allCommt)):
-        print(i)
+        #print(i)
         commt = allCommt[i].find_all('div', itemprop = 'text')[0].getText().split()[0]
-        print(commt)
+        #print(commt)
         commts.append(commt)
 
     if len(commts) > 0:
@@ -85,12 +85,14 @@ def getPostMetaInfo(soup, postUrl):
     strTime = metaInfo[2].getText().strip()
     TIME_STAMP = getTime(strTime)
 
-    # ratings = metaInfo[3].getText().strip()
+    ratings = metaInfo[3].getText().strip()
+    RATING = ratings.split('(')[0]
+    print(ratings)
     # ratings = ratings.splits(" ")
     # RATING = ratings[0]
     # POLARITY = ratings[0]
     
-    return [ID, AUTHOR, BOARD, TIME_STAMP, '123', '123']
+    return [ID, AUTHOR, BOARD, TIME_STAMP, RATING, '123']
 
 def getPostCont(allCont):
     # Post itself 

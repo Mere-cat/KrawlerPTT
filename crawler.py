@@ -1,5 +1,8 @@
 import requests
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 import functions as myFun
 import default_var as DFLT
 
@@ -70,6 +73,9 @@ def crawl(board, totalPost, dataSet):
                 driverEachPost = myFun.enterBoard(postUrl)
                 soupEachPost = myFun.BeautifulSoup(driverEachPost.page_source, 'html.parser')
 
+                # Wait until we load all of the image
+                myFun.time.sleep(1)  
+
                 # If there exists a 'load more' btn
                 btn = soupEachPost.find_all('button', class_='amber--text v-btn v-btn--outline v-btn--depressed theme--dark')
                 if(btn):
@@ -94,14 +100,17 @@ def crawl(board, totalPost, dataSet):
 
                 # Obtain AUTHOR_IP
                 allf3 = soupEachPost.find_all('span', class_ = 'f3')
-                #print(allf3)
                 AUTHOR_IP = myFun.getAurIp(allf3)
+
+                # Obtain IMG_SRC
+                image = soupEachPost.find_all('img', itemprop = 'image')
+                #print(image)
+                IMG_SRC = myFun.getImgSrc(image)
 
                 # Obtain CONTENT
                 # notice this will decompose all of the f3 span in allCont
                 allCont = soupEachPost.find_all('div', class_ = 'e7-main-content')
                 CONTENT = myFun.getPostCont(allCont)
-                
 
                 # Obtain the comments part: COMMENTS, RATING, COMMENTERS, POLARITY
                 allCommt = soupEachPost.find_all('div', itemprop = 'comment')
@@ -112,7 +121,7 @@ def crawl(board, totalPost, dataSet):
                 driverEachPost.quit()
 
                 # Write data into data set
-                eachData = [ID, TITLE, AUTHOR, BOARD, CONTENT, TIME_STAMP, AUTHOR_IP, COMMENTS, RATING, COMMENTERS, POLARITY]
+                eachData = [ID, TITLE, AUTHOR, BOARD, CONTENT, TIME_STAMP, AUTHOR_IP, COMMENTS, RATING, COMMENTERS, POLARITY, IMG_SRC]
                 dataSet.append(eachData)
 
 
@@ -127,7 +136,7 @@ def crawl(board, totalPost, dataSet):
 
     # Output the data
     df = myFun.pd.DataFrame(dataSet)
-    df.columns = ["ID", "TITLE", "AUTHOR", "BOARD", "CONTENT", "TIME_STAMP", "AUTHOR_IP", "COMMENTS", "RATING", "COMMENTERS", "POLARITY"]
+    df.columns = ["ID", "TITLE", "AUTHOR", "BOARD", "CONTENT", "TIME_STAMP", "AUTHOR_IP", "COMMENTS", "RATING", "COMMENTERS", "POLARITY", "IMG_SRC"]
     df.to_csv("output.csv")
 
     return 0

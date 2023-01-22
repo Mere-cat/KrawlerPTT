@@ -166,3 +166,14 @@ def getPostCont(allCont):
         CONTENT = contParts
 
     return CONTENT
+
+
+def getImgSrc(image):
+    if(len(image) == 0):
+        return 'no image'
+    else:
+        IMG_SRC = []
+        for img in image:
+            #print(img['src'])
+            IMG_SRC.append(img['src'])
+        return IMG_SRC

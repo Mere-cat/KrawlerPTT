@@ -27,6 +27,17 @@ import functions as myFun # The functions to get the information
 import default_var as DFLT # some of our default setting
 
 def crawl(board, totalPost, dataSet):
+    """ Crawl specific number of data from the specific board.
+
+    Args:
+      board: the board the user wants to crawl.
+      totalPost: the number of post the user wants to crawl.
+      dataSet: where we store the data we crawled.
+
+    Returns:
+      returns 0 if executed successfully.
+      returns -1 if the board doesn't exist.
+    """
 
     url = 'https://www.pttweb.cc/bbs/' + board
 

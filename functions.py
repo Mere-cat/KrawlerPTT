@@ -27,17 +27,33 @@ from bs4 import BeautifulSoup
 from time import sleep
 
 def enterBoard(url):
+    """ Make selenium automates browser and go to the specific web page.
+
+    Args:
+      url: the url of the web page we want to enter.
+    
+    Returns:
+      returns the web driver.
+    """
     # make selenium not pop up windows
     options = Options()
     options.add_argument('--headless')
-    driver = webdriver.Firefox(options=options)
+    driver = webdriver.Firefox(options=options) # we use firefox here, it can be other browser
 
-    driver.get(url)
-    driver.add_cookie({"name": "over18", "value": "1"})
+    #driver.get(url)
+    #driver.add_cookie({"name": "over18", "value": "1"})
     driver.get(url)
     return driver
 
 def getPostId(postUrl):
+    """ Obtain the post ID.
+
+    Args:
+      postUrl: the url of the post, from which we parse out the post ID.
+    
+    Returns:
+      returns the post ID (string).
+    """
     urlParts = postUrl.split('/')
     numParts = len(urlParts)
     ID = urlParts[numParts-1]
@@ -45,15 +61,39 @@ def getPostId(postUrl):
     return ID
 
 def getBoard(strBoard):
+    """ Obtain the board name.
+
+    Args:
+      strBoard: a string contains the name of the board
+    
+    Returns:
+      returns the board name (string).
+    """
     strBoard = strBoard.split(' ')
     return strBoard[1]
 
 def getTime(strTime):
+    """ Obtain the post time stamp.
+
+    Args:
+      strTime: a string contains the time stamp of the post.
+    
+    Returns:
+      returns the time stamp (string).
+    """
     strTime = strTime.replace('(', ')')
     strTime = strTime.split(')')
     return strTime[1]
 
 def getAurIp(allf3):
+    """ Obtain the author IP address.
+
+    Args:
+      allf3: all span elements with class 'f3.'
+    
+    Returns:
+      returns the author IP address (string).
+    """
     # The author ip information
     # The author ip is in the last 'f3' class span
     for span in allf3:
@@ -72,13 +112,19 @@ def getAurIp(allf3):
     return "0.0.0.0"
 
 def getCommt(allCommt):
+    """ Obtain the comments of the post.
+
+    Args:
+      allCommt: all div elements with itemprop 'comment.'
+    
+    Returns:
+      returns the comments of the post (string) if there exists any comment.
+      returns 'no comment' if there's no comment.
+    """
     commts = []
     for i in range(0, len(allCommt)):
-        #print(i)
         commt = allCommt[i].find_all('div', itemprop = 'text')[0].getText()
-        #print(commt)
         commts.append(commt)
-    #print(len(allCommt))
     
     if len(commts) > 0:
         COMMENTS = '!@#'.join(commts)
@@ -86,6 +132,15 @@ def getCommt(allCommt):
     else: return "no comment"
 
 def getCommter(allCommt):
+    """ Obtain the commenters of the post.
+
+    Args:
+      allCommt: all div elements with itemprop 'comment.'
+    
+    Returns:
+      returns the commenters of the post (string) if there exists any comment.
+      returns 'no commenter' if there's no commenter.
+    """
     commters = []
     for i in range(0, len(allCommt)):
         commter = allCommt[i].find_all('div', itemprop = 'author')[0].getText()
@@ -97,10 +152,19 @@ def getCommter(allCommt):
     else: return "no commenter"
 
 def getPostMetaInfo(soup, postUrl):
+    """ Obtain the meta information of the post.
+
+    Args:
+      soup: all of the html elements in the post page.
+      postUrl: the url of the post page.
+    
+    Returns:
+      returns a 6-element-list: [ID, AUTHOR, BOARD, TIME_STAMP, RATING, POLARITY]
+    """
     
     ID = getPostId(postUrl)
 
-    metaInfo = soup.find_all('span', class_ = 'e7-head-content')
+    metaInfo = soup.find_all('span', class_ = 'e7-head-content') # extract all of the 'e7-head-content' elements from soup
     BOARD = metaInfo[0].getText().strip()
 
     AUTHOR = metaInfo[1].getText().strip()
@@ -131,6 +195,14 @@ def getPostMetaInfo(soup, postUrl):
     return [ID, AUTHOR, BOARD, TIME_STAMP, RATING, POLARITY]
 
 def getPostCont(allCont):
+    """ Obtain the content of the post, including the author's reply.
+
+    Args:
+      allCont: all div elements with class 'e7-main-content.'
+    
+    Returns:
+      returns the content of the post.
+    """
     # Post itself 
     # The post content itself is in the first element of allCont, inside the span tag with class ''
     contParts = ''
@@ -184,6 +256,14 @@ def getPostCont(allCont):
     return CONTENT
 
 def getImgSrc(image):
+    """ Obtain the image links in the post.
+
+    Args:
+      image: all img elements with itempro 'image.'
+    
+    Returns:
+      returns all the links of images as a list.
+    """
     if(len(image) == 0):
         return 'no image'
     else:

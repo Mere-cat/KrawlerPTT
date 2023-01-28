@@ -1,3 +1,19 @@
+"""
+This program defines the functions we use for crawling.
+-----------------------------------------------------------------
+
+We have functions here:
+* enterBoard()
+* getPostId()
+* getBoard()
+* getTime()
+* getAurIp()
+* getCommt()
+* getCommter()
+* getPostMetaInfo()
+* getPostCont()
+* getImgSrc()
+"""
 import time
 import pandas as pd
 import re
@@ -166,7 +182,6 @@ def getPostCont(allCont):
         CONTENT = contParts
 
     return CONTENT
-
 
 def getImgSrc(image):
     if(len(image) == 0):
